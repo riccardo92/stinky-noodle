@@ -1,0 +1,54 @@
+[project]
+name = "stinky-noodle"
+version = "0.0.1"
+description = "Stinky noodle is Python-based OpenAPI spec linter compatible with spectral rulesets"
+authors = [
+    { name = "Riccardo Tiebax", email = "riccardo.t@gmail.com" },
+]
+readme = "README.md"
+dependencies = [
+    "loguru==0.7.2",
+    "pydantic==2.6.4",
+    "pyjsonpath==1.2.3"
+]
+
+[project.optional-dependencies]
+tests = []
+
+[project.scripts]
+noodle = "stinky.noodle.core:entrypoint"
+
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel>=0.30"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["app"]
+
+[tool.pytest]
+testpaths = "tests"
+
+[tool.isort]
+profile = "black"
+known_third_party = ["pytest"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.11"
+tag_format = "$version"
+changelog_incremental = true
+update_changelog_on_bump = true
+version_files = ["app/__init__.py:__version__", "pyproject.toml:^version"]
+bump_message = "release $current_version -> $new_version ***NO_CI***"
+
+[tool.deptry]
+ignore_notebooks = true
+
+[tool.deptry.per_rule_ignores]
+DEP001 = ["stinky"]
