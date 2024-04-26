@@ -45,7 +45,7 @@ tag_format = "$version"
 changelog_incremental = true
 update_changelog_on_bump = true
 version_files = ["src/stinky/__init__.py:__version__", "pyproject.toml:^version"]
-bump_message = "release $current_version -> $new_version ***NO_CI***"
+bump_message = "release $current_version -> $new_version [skip ci]"
 
 [tool.deptry]
 ignore_notebooks = true
