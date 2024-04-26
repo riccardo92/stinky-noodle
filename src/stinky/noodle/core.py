@@ -43,7 +43,7 @@ def try_import_custom_callables(
 
 def entrypoint():
     """CLI entrypoint."""
-    parser = argparse.ArgumentParser(prog="openapi.py")
+    parser = argparse.ArgumentParser(prog="noodle")
     parser.add_argument(
         "spec_path",
         help="Path to the spec file",
