@@ -1,3 +1,9 @@
+## 0.0.6 (2024-04-26)
+
+### Fix
+
+- **pyproject.toml**: fixed skip ci str in version bump
+
 ## 0.0.5 (2024-04-26)
 
 ### Fix
