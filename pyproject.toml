@@ -1,6 +1,6 @@
 [project]
 name = "stinky-noodle"
-version = "0.0.4"
+version = "0.0.5"
 description = "Stinky noodle is a Python-based OpenAPI spec linter compatible with spectral rulesets"
 authors = [
     { name = "Riccardo Tiebax", email = "riccardo.t@gmail.com" },
@@ -40,7 +40,7 @@ known_third_party = ["pytest"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.0.4"
+version = "0.0.5"
 tag_format = "$version"
 changelog_incremental = true
 update_changelog_on_bump = true
