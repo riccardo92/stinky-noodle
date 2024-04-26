@@ -1,3 +1,9 @@
+## 0.0.7 (2024-04-26)
+
+### Fix
+
+- **tag.yml**: no tag workflow after tag creation
+
 ## 0.0.6 (2024-04-26)
 
 ### Fix
