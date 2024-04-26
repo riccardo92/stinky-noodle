@@ -1,3 +1,9 @@
+## 0.0.9 (2024-04-26)
+
+### Fix
+
+- **core.py**: fixed program name cli
+
 ## 0.0.8 (2024-04-26)
 
 ### Fix
