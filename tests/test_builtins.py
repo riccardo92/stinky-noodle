@@ -82,10 +82,10 @@ def test_builtins_enumeration(obj: Any, values: Union[Set, List, Tuple], result:
 @pytest.mark.parametrize(
     ("obj", "result"),
     [
-        ("False", True),
-        ("0", True),
+        (False, True),
         (0, True),
-        ("true", False),
+        (1, False),
+        ("anything", False),
     ],
 )
 def test_builtins_falsy(obj: Any, result: bool):
