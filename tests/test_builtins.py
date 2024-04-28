@@ -2,7 +2,13 @@ from typing import Any, List, Optional, Set, Tuple, Union
 
 import pytest
 
-from stinky.noodle.utils.builtins import alphabetical, enumeration, falsy, length
+from stinky.noodle.utils.builtins import (
+    alphabetical,
+    enumeration,
+    falsy,
+    length,
+    pattern,
+)
 
 
 @pytest.mark.parametrize(
@@ -106,3 +112,17 @@ def test_builtins_falsy(obj: Any, result: bool):
 def test_builtins_length(obj: Any, min_arg: int, max_arg: int, result: bool):
     """Test the length builtin"""
     assert length(obj=obj, min=min_arg, max=max_arg) is result
+
+
+@pytest.mark.parametrize(
+    ("obj", "match", "not_match", "result"),
+    [
+        ("some value", "value", None, True),
+        ("some value", "^(value)", None, False),
+    ],
+)
+def test_builtins_pattern(
+    obj: Any, match: Optional[str], not_match: Optional[str], result: bool
+):
+    """Test the pattern builtin"""
+    assert pattern(obj=obj, match=match, not_match=not_match) is result

@@ -13,43 +13,48 @@ CASE_PATTERNS = {
 }
 
 
-def alphabetical(obj: Any, keyed_by: Optional[str] = None):
+def alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
     if keyed_by is not None:
         return sorted(obj, key=lambda obj: obj[keyed_by]) == obj
 
     return sorted(obj) == obj
 
 
-def enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs):
+def enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> bool:
     return obj in values
 
 
-def falsy(obj: Any, **kwargs):
+def falsy(obj: Any, **kwargs) -> bool:
     return obj in FALSY
 
 
-def length(obj: Any, min: int, max: int):
+def length(obj: Any, min: int, max: int) -> bool:
     return min <= len(obj) < max
 
 
-def pattern(obj: Any, match: Optional[str] = None, not_match: Optional[str] = None):
-    """_summary_
+def pattern(
+    obj: str, match: Optional[str] = None, not_match: Optional[str] = None
+) -> bool:
+    """Apply a regex pattern or negated regex pattern to a string input.
 
     Args:
-        obj (Any): _description_
-        match (Optional[str], optional): _description_. Defaults to None.
-        not_match (Optional[str], optional): _description_. Defaults to None.
+        obj (Any): The object we're applying the matching on.
+        match (Optional[str], optional): Pattern we want to find a match for.
+            Defaults to None.
+        not_match (Optional[str], optional): Pattern we don't want to find a
+            math for. Defaults to None.
 
     Returns:
-        _type_: _description_
+        bool: Whether we matched what was specified in the match arg or
+        we didn't match what was in the not_match arg.
     """
     if obj is None:
         return False
     cond = True
     if match is not None:
-        cond &= re.match(match, obj)
+        cond &= re.match(match, obj) is not None
     if match is not None:
-        cond &= not re.match(not_match, obj)
+        cond &= not re.match(not_match, obj) is not None
     return cond
 
 
@@ -58,7 +63,7 @@ def casing(
     type: str,
     disallow_digits: Optional[bool] = False,
     separator: Optional[Dict] = None,
-):
+) -> bool:
     """Detect the use of different casings.
 
     Args:
@@ -110,15 +115,15 @@ def schema(obj: Any, **kwargs):
     pass
 
 
-def truthy(obj: Any, **kwargs):
+def truthy(obj: Any, **kwargs) -> bool:
     return obj in TRUTHY
 
 
-def undefined(obj: Any):
+def undefined(obj: Any) -> bool:
     return obj is None
 
 
-def defined(obj: Any):
+def defined(obj: Any) -> bool:
     return not undefined(obj)
 
 
@@ -126,5 +131,5 @@ def unreferencedReusableObject(obj: Any):
     pass
 
 
-def xor(obj: Any, properties: List[str]):
+def xor(obj: Any, properties: List[str]) -> bool:
     return len(defined(obj.get(prop) for prop in properties)) == 1
