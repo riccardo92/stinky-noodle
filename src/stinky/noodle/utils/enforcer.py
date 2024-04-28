@@ -9,7 +9,6 @@ from stinky.noodle.utils.ruleset import RuleSetModel
 
 
 class RuleEnforcer:
-
     def __init__(
         self,
         ruleset_instance: RuleSetModel,
