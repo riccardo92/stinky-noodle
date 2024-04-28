@@ -17,11 +17,14 @@ repos:
       - id: prettier
         files: \.(js|ts|jsx|tsx|css|less|html|json|markdown|md|yaml|yml)$
 
-  - repo: https://github.com/psf/black
-    rev: 24.1.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.2
     hooks:
-      - id: black
-        additional_dependencies: [".[jupyter]"]
+      # Run the linter.
+      - id: ruff
+        args: [--fix]
+      # Run the formatter.
+      - id: ruff-format
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.2
