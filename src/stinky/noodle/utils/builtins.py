@@ -53,8 +53,8 @@ def pattern(
     cond = True
     if match is not None:
         cond &= re.match(match, obj) is not None
-    if match is not None:
-        cond &= not re.match(not_match, obj) is not None
+    if not_match is not None:
+        cond &= not (re.match(not_match, obj) is not None)
     return cond
 
 
