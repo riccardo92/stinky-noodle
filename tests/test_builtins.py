@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Set, Tuple, Union
 
 import pytest
 
-from stinky.noodle.utils.builtins import alphabetical, enumeration, falsy
+from stinky.noodle.utils.builtins import alphabetical, enumeration, falsy, length
 
 
 @pytest.mark.parametrize(
@@ -75,7 +75,7 @@ def test_builtins_alphabetical(input_obj: Any, keyed_by: Optional[str], result: 
     ],
 )
 def test_builtins_enumeration(obj: Any, values: Union[Set, List, Tuple], result: bool):
-    """Test the alphabetical builtin"""
+    """Test the enumeration builtin"""
     assert enumeration(obj=obj, values=values) is result
 
 
@@ -89,5 +89,20 @@ def test_builtins_enumeration(obj: Any, values: Union[Set, List, Tuple], result:
     ],
 )
 def test_builtins_falsy(obj: Any, result: bool):
-    """Test the alphabetical builtin"""
+    """Test the falsy builtin"""
     assert falsy(obj=obj) is result
+
+
+@pytest.mark.parametrize(
+    ("obj", "min_arg", "max_arg", "result"),
+    [
+        ("", 0, 0, False),
+        ("", 0, 1, True),
+        ("", 2, 4, False),
+        ("a", 0, 1, False),
+        ("a", 1, 2, True),
+    ],
+)
+def test_builtins_length(obj: Any, min_arg: int, max_arg: int, result: bool):
+    """Test the length builtin"""
+    assert length(obj=obj, min=min_arg, max=max_arg) is result
