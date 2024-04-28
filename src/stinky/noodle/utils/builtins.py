@@ -15,9 +15,9 @@ CASE_PATTERNS = {
 
 def alphabetical(obj: Any, keyed_by: Optional[str] = None):
     if keyed_by is not None:
-        return sorted(obj, key=keyed_by) == obj
+        return sorted(obj, key=lambda obj: obj[keyed_by]) == obj
 
-    return sorted(obj) == sorted
+    return sorted(obj) == obj
 
 
 def enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs):
