@@ -4,16 +4,21 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 FALSY = (False, "", 0, None)
 TRUTHY = (True, "", 1)
 CASE_PATTERNS = {
-    "camel": "^{0:s}[a-zA-Z]+({1:s}[A-Z][a-z]+)+$",
-    "pascal": "^{0:s}[A-Z][a-z]+({1:s}[A-Z][a-z]+)+$",
-    "snake": "^{0:s}[a-z]+({1:s}[a-z]+)+$",
-    "kebab": "^{0:s}[a-z]+({1:s}[a-z]+)+$",
-    "cobol": "^{0:s}[A-Z]+({1:s}[A-Z]+)+$",
-    "flat": "^{0:s}[a-z{1:s}]+$",
+    # "<type>": ("<patt>", "<default_separator>")
+    "camel": ("^{0:s}[a-z]+({1:s}[A-Z][a-z]+)+$", ""),
+    "pascal": ("^{0:s}[A-Z][a-z]+({1:s}[A-Z][a-z]+)+$", ""),
+    "snake": ("^{0:s}[a-z]+({1:s}[a-z]+)+$", "_"),
+    "kebab": ("^{0:s}[a-z]+({1:s}[a-z]+)+$", "-"),
+    "cobol": ("^{0:s}[A-Z]+({1:s}[A-Z]+)+$", "-"),
+    "macro": ("^{0:s}[A-Z]+({1:s}[A-Z]+)+$", "_"),
+    "flat": ("^{0:s}[a-z{1:s}]+$", ""),
 }
 
 
 def alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
+    if obj is None:
+        raise ValueError("obj cannot have value None")
+
     if keyed_by is not None:
         return sorted(obj, key=lambda obj: obj[keyed_by]) == obj
 
@@ -21,6 +26,9 @@ def alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
 
 
 def enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> bool:
+    if obj is None:
+        raise ValueError("obj cannot have value None")
+
     return obj in values
 
 
@@ -29,6 +37,9 @@ def falsy(obj: Any, **kwargs) -> bool:
 
 
 def length(obj: Any, min: int, max: int) -> bool:
+    if obj is None:
+        raise ValueError("obj cannot have value None")
+
     return min <= len(obj) < max
 
 
@@ -49,7 +60,8 @@ def pattern(
         we didn't match what was in the not_match arg.
     """
     if obj is None:
-        return False
+        raise ValueError("obj cannot have value None")
+
     cond = True
     if match is not None:
         cond &= re.match(match, obj) is not None
@@ -73,42 +85,26 @@ def casing(
         separator (Optional[Dict], optional): a dict containing char (str) and allow_leading (bool). Defaults to None.
     """
 
+    if obj is None:
+        raise ValueError("obj cannot have value None")
+
     if disallow_digits and re.match(r"[0-9]", obj):
         return False
 
-    if type == "camel":
-        sep = ""
-        patt = CASE_PATTERNS["camel"]
-    elif type == "pascal":
-        sep = ""
-        patt = CASE_PATTERNS["pascal"]
-    elif type == "snake":
-        sep = "_"
-        patt = CASE_PATTERNS["snake"]
-    elif type == "kebab":
-        sep = "-"
-        patt = CASE_PATTERNS["kebab"]
-    elif type == "flat":
-        sep = ""
-        patt = CASE_PATTERNS["flat"]
-    elif type == "cobol":
-        sep = "-"
-        patt = CASE_PATTERNS["cobol"]
-    elif type == "macro":
-        sep = "_"
-        patt = CASE_PATTERNS["macro"]
-    else:
+    try:
+        patt, sep = CASE_PATTERNS[type]
+    except KeyError:
         raise ValueError(f"Case type {type} is not recognized.")
 
+    leading_sep = ""
     if separator is not None:
-        sep = separator.get("char", sep)
+        sep = re.escape(separator.get("char", sep))
         leading = separator.get("allow_leading", False)
-        leading_sep = ""
         if leading:
             leading_sep = sep
 
     patt = patt.format(leading_sep, sep)
-    return obj & re.match(patt, obj) | False
+    return re.match(patt, obj) is not None
 
 
 def schema(obj: Any, **kwargs):
