@@ -1,3 +1,4 @@
 deptry==0.16.1
 pre-commit==3.7.0
+ruff==0.4.2
 tox==4.14.2
