@@ -111,7 +111,7 @@ def schema(obj: Any, **kwargs):
 
 
 def truthy(obj: Any, **kwargs):
-    return not falsy(obj)
+    return obj in TRUTHY
 
 
 def undefined(obj: Any):
