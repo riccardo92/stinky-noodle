@@ -1,8 +1,16 @@
 import re
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
+from jsonschema.validators import (
+    Draft3Validator,
+    Draft4Validator,
+    Draft6Validator,
+    Draft7Validator,
+    Draft201909Validator,
+    Draft202012Validator,
+)
+
 FALSY = (False, "", 0, None)
-TRUTHY = (True, "", 1)
 CASE_PATTERNS = {
     # "<type>": ("<patt>", "<default_separator>")
     "camel": ("^{0:s}[a-z]+({1:s}[A-Z][a-z]+)+$", ""),
@@ -14,8 +22,17 @@ CASE_PATTERNS = {
     "flat": ("^{0:s}[a-z{1:s}]+$", ""),
 }
 
+JSON_SCHEMA_VALIDATORS = {
+    "draft3": Draft3Validator,
+    "draft4": Draft4Validator,
+    "draft6": Draft6Validator,
+    "draft7": Draft7Validator,
+    "draft201909": Draft201909Validator,
+    "draft202012": Draft202012Validator,
+}
 
-def alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
+
+def builtin_alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
     if obj is None:
         raise ValueError("obj cannot have value None")
 
@@ -25,25 +42,25 @@ def alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
     return sorted(obj) == obj
 
 
-def enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> bool:
+def builtin_enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> bool:
     if obj is None:
         raise ValueError("obj cannot have value None")
 
     return obj in values
 
 
-def falsy(obj: Any, **kwargs) -> bool:
+def builtin_falsy(obj: Any, **kwargs) -> bool:
     return obj in FALSY
 
 
-def length(obj: Any, min: int, max: int) -> bool:
+def builtin_length(obj: Any, min: int, max: int) -> bool:
     if obj is None:
         raise ValueError("obj cannot have value None")
 
     return min <= len(obj) < max
 
 
-def pattern(
+def builtin_pattern(
     obj: str, match: Optional[str] = None, not_match: Optional[str] = None
 ) -> bool:
     """Apply a regex pattern or negated regex pattern to a string input.
@@ -70,7 +87,7 @@ def pattern(
     return cond
 
 
-def casing(
+def builtin_casing(
     obj: str,
     type: str,
     disallow_digits: Optional[bool] = False,
@@ -107,25 +124,47 @@ def casing(
     return re.match(patt, obj) is not None
 
 
-def schema(obj: Any, **kwargs):
-    pass
+def builtin_schema(
+    obj: Any, schema: Dict, dialect: str, all_errors: Optional[bool] = False
+) -> List[str]:
+    if obj is None:
+        raise ValueError("obj cannot have value None")
+
+    try:
+        validator_cls = JSON_SCHEMA_VALIDATORS[dialect]
+    except KeyError:
+        raise ValueError(
+            f"Dialect {dialect} is not valid, choose one of ({', '.join(JSON_SCHEMA_VALIDATORS)})"
+        )
+    validator = validator_cls(schema=schema)
+    errors = sorted(validator.iter_errors(obj), key=lambda e: e.path)
+    out = []
+    for error in errors:
+        temp = []
+        for suberror in sorted(error.context, key=lambda e: e.schema_path):
+            temp += [list(suberror.schema_path), suberror.message]
+            if not all_errors:
+                break
+        out += [temp]
+    return out
 
 
-def truthy(obj: Any, **kwargs) -> bool:
-    return obj in TRUTHY
+def builtin_truthy(obj: Any, **kwargs) -> bool:  # pragma: no cover
+    return not builtin_falsy(obj)
 
 
-def undefined(obj: Any) -> bool:
+def builtin_undefined(obj: Any) -> bool:  # pragma: no cover
     return obj is None
 
 
-def defined(obj: Any) -> bool:
-    return not undefined(obj)
+def builtin_defined(obj: Any) -> bool:  # pragma: no cover
+    return not builtin_undefined(obj)
 
 
-def unreferencedReusableObject(obj: Any):
+def builtin_unreferenced_reusable_object(obj: Any):  # pragma: no cover
+    # TODO: implementation
     pass
 
 
-def xor(obj: Any, properties: List[str]) -> bool:
-    return len(defined(obj.get(prop) for prop in properties)) == 1
+def builtin_xor(obj: Any, properties: List[str]) -> bool:
+    return len(builtin_defined(obj.get(prop) for prop in properties)) == 1
