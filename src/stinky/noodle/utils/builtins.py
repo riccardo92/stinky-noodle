@@ -33,6 +33,18 @@ JSON_SCHEMA_VALIDATORS = {
 
 
 def builtin_alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
+    """Check if obj is sorted, optionally by key
+
+    Args:
+        obj (Any): The obj to verify
+        keyed_by (Optional[str], optional): key to use for sorting. Defaults to None.
+
+    Raises:
+        ValueError: Raised when the specified `key` does not exist in `obj`
+
+    Returns:
+        bool: Indicates whether `obj` is sorted alphabetically or not.
+    """
     if obj is None:
         raise ValueError("obj cannot have value None")
 
@@ -43,6 +55,14 @@ def builtin_alphabetical(obj: Any, keyed_by: Optional[str] = None) -> bool:
 
 
 def builtin_enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> bool:
+    """Check for presence in predefined list.
+
+    Args:
+        obj (Any): The obj to verify
+
+    Returns:
+        bool: Indicates wheter `obj` is equal to one of `values`.
+    """
     if obj is None:
         raise ValueError("obj cannot have value None")
 
@@ -50,10 +70,31 @@ def builtin_enumeration(obj: Any, values: Union[Set, List, Tuple], **kwargs) -> 
 
 
 def builtin_falsy(obj: Any, **kwargs) -> bool:
+    """Check for falsiness
+
+    Args:
+        obj (Any): The obj to verify
+
+    Returns:
+        bool: Indicates wheter `obj` is equal to one of the falsy values.
+    """
     return obj in FALSY
 
 
 def builtin_length(obj: Any, min: int, max: int) -> bool:
+    """Check min-max bounds of obj
+
+    Args:
+        obj (Any): The obj to verify
+        min (int): Minimum (inclusive)
+        max (int): Maximum (non-inclusive)
+
+    Raises:
+        ValueError: raised when obj is None
+
+    Returns:
+        bool: Whether `obj` is within the required bounds (`min` <= `obj` < `max`)
+    """
     if obj is None:
         raise ValueError("obj cannot have value None")
 
@@ -73,8 +114,8 @@ def builtin_pattern(
             math for. Defaults to None.
 
     Returns:
-        bool: Whether we matched what was specified in the match arg or
-        we didn't match what was in the not_match arg.
+        bool: Whether we matched what was specified in `match` or
+            we didn't match what was in `not_match`.
     """
     if obj is None:
         raise ValueError("obj cannot have value None")
@@ -98,8 +139,10 @@ def builtin_casing(
     Args:
         obj (Any): The object we're applying the matching on.
         type (str): Type of casing.
-        disallow_digits (Optional[bool], optional): Whether digits are allowed at all. Defaults to False.
-        separator (Optional[Dict], optional): a dict containing char (str) and allow_leading (bool). Defaults to None.
+        disallow_digits (Optional[bool], optional): Whether digits are allowed at all.
+            Defaults to False.
+        separator (Optional[Dict], optional): a dict containing
+            char (str) and allow_leading (bool). Defaults to None.
     """
 
     if obj is None:
@@ -127,6 +170,22 @@ def builtin_casing(
 def builtin_schema(
     obj: Any, schema: Dict, dialect: str, all_errors: Optional[bool] = False
 ) -> List[str]:
+    """Verify json schema instance represented by obj.
+
+    Args:
+        obj (Any): The instance
+        schema (Dict): The json schema
+        dialect (str): the json schema dialect
+        all_errors (Optional[bool], optional): whether to return errors
+            of the first found type only, or to return all. Defaults to False.
+
+    Raises:
+        ValueError: Raised when `obj` is None
+        ValueError: Raised of the json schema `dialect` is invalid
+
+    Returns:
+        List[str]: Nested list of json schema validation errors
+    """
     if obj is None:
         raise ValueError("obj cannot have value None")
 
@@ -150,14 +209,38 @@ def builtin_schema(
 
 
 def builtin_truthy(obj: Any, **kwargs) -> bool:  # pragma: no cover
+    """Check for non-falsiness
+
+    Args:
+        obj (Any): The obj to verify
+
+    Returns:
+        bool: Indicates whether `obj` is not falsy
+    """
     return not builtin_falsy(obj)
 
 
 def builtin_undefined(obj: Any) -> bool:  # pragma: no cover
+    """Check for None values
+
+    Args:
+        obj (Any): The obj to verify
+
+    Returns:
+        bool: Indicates whether `obj` is None
+    """
     return obj is None
 
 
 def builtin_defined(obj: Any) -> bool:  # pragma: no cover
+    """Check for non-None values
+
+    Args:
+        obj (Any): The obj to verify
+
+    Returns:
+        bool: Indicates whether `obj` is not None
+    """
     return not builtin_undefined(obj)
 
 
@@ -167,4 +250,13 @@ def builtin_unreferenced_reusable_object(obj: Any):  # pragma: no cover
 
 
 def builtin_xor(obj: Any, properties: List[str]) -> bool:
+    """Check for exclusive-or existence of properties in obj.
+
+    Args:
+        obj (Any): The obj to verify
+        properties (List[str]): List of properties that should exist exclusively.
+
+    Returns:
+        bool: Whether or not only one of `properties` is defined.
+    """
     return len(builtin_defined(obj.get(prop) for prop in properties)) == 1
