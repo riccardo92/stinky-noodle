@@ -37,6 +37,7 @@ class RuleEnforcer:
                 f"Callabel with name: {callable_name} is not a built-in. Trying custom callables."
             )
 
+        callable_name = sanitize_callable_name(callable_name, custom=True)
         try:
             callable = self.custom_callables[callable_name]
         except KeyError:
