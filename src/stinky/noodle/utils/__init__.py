@@ -10,4 +10,4 @@ def sanitize_callable_name(name: str) -> str:
     Returns:
         str: sanitzed python compatible callable name
     """
-    return snake_case(name)
+    return f"builtin_{snake_case(name)}"
