@@ -2,7 +2,7 @@ from typing import Callable, List, Optional
 
 from loguru import logger
 
-from stinky.noodle.utils import builtins, sanitize_func_name
+from stinky.noodle.utils import builtins, sanitize_callable_name
 from stinky.noodle.utils.exceptions import NonExistentCallableError
 from stinky.noodle.utils.parser import Parser
 from stinky.noodle.utils.ruleset import RuleSetModel
@@ -28,7 +28,7 @@ class RuleEnforcer:
         Returns:
             Callable: The callable.
         """
-        callable_name = sanitize_func_name(callable_name)
+        callable_name = sanitize_callable_name(callable_name)
         try:
             callable = getattr(builtins, callable_name)
             return callable
