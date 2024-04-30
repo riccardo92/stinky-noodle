@@ -60,18 +60,18 @@ def entrypoint():
 
     parser.add_argument(
         "-f",
-        "--custom-functiosn-module",
-        help="The custom functions module",
-        dest="functions_module",
+        "--custom-callables-module",
+        help="The custom callables module",
+        dest="callables_module",
         required=False,
         default=None,
     )
 
     parser.add_argument(
         "-d",
-        "--custom-functions-dir",
+        "--custom-callables-dir",
         help="The path that contains the module to be imported",
-        dest="functions_path",
+        dest="callables_dir",
         required=False,
         default=None,
     )
@@ -89,7 +89,7 @@ def entrypoint():
     ruleset_path = Path(args.ruleset_path).absolute()
     spec_path = Path(args.spec_path).absolute()
     custom_callables_module = args.callables_module
-    custom_callables_path = args.callables_path
+    custom_callables_path = args.callables_dir
     specs = read_json(spec_path)
     ruleset = read_json(ruleset_path)
     ruleset_instance = RuleSetModel(**ruleset)
