@@ -28,18 +28,18 @@ class RuleEnforcer:
         Returns:
             Callable: The callable.
         """
-        callable_name = sanitize_callable_name(callable_name)
+        sanitized_callable_name = sanitize_callable_name(callable_name)
         try:
-            callable = getattr(builtins, callable_name)
+            callable = getattr(builtins, sanitized_callable_name)
             return callable
         except AttributeError:
             logger.debug(
                 f"Callabel with name: {callable_name} is not a built-in. Trying custom callables."
             )
 
-        callable_name = sanitize_callable_name(callable_name, custom=True)
+        sanitized_callable_name = sanitize_callable_name(callable_name, custom=True)
         try:
-            callable = self.custom_callables[callable_name]
+            callable = self.custom_callables[sanitized_callable_name]
         except KeyError:
             logger.debug(
                 f'Callabel with name: "{callable_name}" is not a custom callable either.'
