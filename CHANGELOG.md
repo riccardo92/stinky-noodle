@@ -1,3 +1,18 @@
+## 0.0.10 (2024-05-01)
+
+### Fix
+
+- **utils/enforcer**: bugfix conditional callable prefix
+- **utils/enforcer**: conditional callable prefix implementation in enforcer
+- **utils/__init__.py**: conditional callable prefix
+- **core.py**: fixed argparser arg names
+- **utils/__init__.py**: added builtin_ prefix to callable name
+- **utils/__init__.py**: snake case conversion and updated doc string
+- **builtins.py**: added json schema builtin function and added unit test
+- **builtins.py**: bug fix in argument check of the pattern builtin
+- **builtins.py**: updated doc string and added some return type hints
+- **builtins.py**: redef truthy function
+
 ## 0.0.9 (2024-04-26)
 
 ### Fix
