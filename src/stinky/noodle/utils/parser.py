@@ -5,7 +5,6 @@ from pyjsonpath import JsonPath
 
 
 class Parser:
-
     def __init__(self, specs: Dict):
         self.specs = specs
 

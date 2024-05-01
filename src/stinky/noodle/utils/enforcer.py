@@ -2,14 +2,13 @@ from typing import Callable, List, Optional
 
 from loguru import logger
 
-from stinky.noodle.utils import builtins, sanitize_func_name
+from stinky.noodle.utils import builtins, sanitize_callable_name
 from stinky.noodle.utils.exceptions import NonExistentCallableError
 from stinky.noodle.utils.parser import Parser
 from stinky.noodle.utils.ruleset import RuleSetModel
 
 
 class RuleEnforcer:
-
     def __init__(
         self,
         ruleset_instance: RuleSetModel,
@@ -29,17 +28,18 @@ class RuleEnforcer:
         Returns:
             Callable: The callable.
         """
-        callable_name = sanitize_func_name(callable_name)
+        sanitized_callable_name = sanitize_callable_name(callable_name)
         try:
-            callable = getattr(builtins, callable_name)
+            callable = getattr(builtins, sanitized_callable_name)
             return callable
         except AttributeError:
             logger.debug(
                 f"Callabel with name: {callable_name} is not a built-in. Trying custom callables."
             )
 
+        sanitized_callable_name = sanitize_callable_name(callable_name, custom=True)
         try:
-            callable = self.custom_callables[callable_name]
+            callable = self.custom_callables[sanitized_callable_name]
         except KeyError:
             logger.debug(
                 f'Callabel with name: "{callable_name}" is not a custom callable either.'

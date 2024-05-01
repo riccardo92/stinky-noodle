@@ -1,10 +1,15 @@
-def sanitize_func_name(name: str) -> str:
-    """_summary_
+from convert_case import snake_case
+
+
+def sanitize_callable_name(name: str, custom: bool = False) -> str:
+    """Sanitzation for the JS callable name.
 
     Args:
-        name (str): _description_
+        name (str): name of the callable
+        custom(bool): whether the callable is a custom one
 
     Returns:
-        str: _description_
+        str: sanitzed python compatible callable name
     """
-    return name.replace("-", "_").lower()
+    prefix = "" if custom else "builtin_"
+    return f"{prefix}{snake_case(name)}"

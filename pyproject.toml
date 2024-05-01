@@ -7,6 +7,8 @@ authors = [
 ]
 readme = "README.md"
 dependencies = [
+    "convert-case==1.2.3",
+    "jsonschema==4.21.1",
     "loguru==0.7.2",
     "pydantic==2.6.4",
     "pyjsonpath==1.2.3"
@@ -49,6 +51,7 @@ bump_message = "release $current_version -> $new_version"
 
 [tool.deptry]
 ignore_notebooks = true
+extend_exclude = ["examples"]
 
 [tool.deptry.per_rule_ignores]
 DEP001 = ["stinky"]

@@ -19,4 +19,14 @@ noodle -s <path-to-ruleset>[ -d <dir-containing-custom-module>][ -m <cusom-modul
 
 ## Caveats
 
-Spectral linting rules can make use of custom functions written in js. There is currently no way of automatically converting those functions in python built into Stink noodle. Functions always have to be manually converted. See the `Functions` section on how to do that.
+- Spectral linting rules can make use of custom functions written in js. There is currently no way of automatically converting those functions in python built into Stink noodle. Functions always have to be manually converted. See the `Custom callables` section on how to do that.
+
+- Spectral's builtin `unreferencedReusableObjects`, named `unreferenced_reusable_objects` in `stinky-noodle`, has not yet been implemented due to its complexity (e.g. it depends on a dependency graph of the API spec document). It will be implemented in the near future.
+
+## Custom callables
+
+TODO
+
+## Using stinky-noodle in pre-commit
+
+TODO
